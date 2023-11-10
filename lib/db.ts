@@ -1,9 +1,10 @@
 'use server';
 
 import { sql } from '@vercel/postgres';
+import { revalidatePath } from 'next/cache';
 
 export const getUsers = async () => {
   const { rows } = await sql`SELECT * from users`;
-  console.log('----Rows-----', rows);
+  revalidatePath('/');
   return rows;
 };

@@ -7,12 +7,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getUsers } from '@/utils';
+import { getUsers } from '@/lib/db';
 
 export default async function Users(): Promise<JSX.Element> {
-  // const rows = await getUsers();
-  const rows: { id: string; name: string; email: string; password: string }[] =
-    [];
+  const rows = await getUsers();
 
   return (
     <div className="border border-white p-2 shadow-md">

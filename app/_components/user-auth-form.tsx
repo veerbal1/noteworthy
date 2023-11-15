@@ -8,58 +8,100 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
+import { authenticate } from '@/lib/actions';
+
+import { useFormState, useFormStatus } from 'react-dom';
+
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-  }
+  const [state, dispatch] = useFormState(authenticate, undefined);
 
   return (
     <div className={cn('grid gap-6', className)} {...props}>
-      <form onSubmit={onSubmit}>
+      <form action={dispatch}>
         <div className="grid gap-2">
           <div className="grid gap-2">
-            <Label className="sr-only" htmlFor="email">
-              Email
-            </Label>
-            <Input
+            <FormInput
               id="email"
+              name="email"
               placeholder="name@example.com"
               type="email"
-              autoCapitalize="none"
               autoComplete="email"
-              autoCorrect="off"
-              disabled={isLoading}
+              label="Email"
+              required
             />
-            <Label className="sr-only" htmlFor="password">
-              Password
-            </Label>
-            <Input
+            <FormInput
               id="password"
+              name="password"
+              label="Password"
               placeholder="Password"
               type="password"
-              autoCapitalize="none"
               autoComplete="password"
-              autoCorrect="off"
-              disabled={isLoading}
+              required
             />
+
+            <div className="flex h-8 items-end space-x-1">
+              {state === 'CredentialsSignin' && (
+                <>
+                  <p aria-live="polite" className="text-sm text-red-500">
+                    Invalid credentials
+                  </p>
+                </>
+              )}
+            </div>
           </div>
-          <Button disabled={isLoading}>
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            Sign In
-          </Button>
+          <SignInButton />
         </div>
       </form>
     </div>
   );
 }
+
+const FormInput = ({
+  label = '',
+  name,
+  placeholder,
+  autoComplete,
+  type,
+  required,
+  id,
+}: {
+  id: string;
+  label: string;
+  name: string;
+  placeholder: string;
+  autoComplete: string;
+  type: string;
+  required: boolean;
+}) => {
+  const { pending } = useFormStatus();
+  return (
+    <>
+      <Label className="sr-only" htmlFor={id}>
+        {label.charAt(0).toUpperCase() + label.slice(1)}
+      </Label>
+      <Input
+        id={id}
+        name={name}
+        placeholder={placeholder}
+        type={type}
+        autoCapitalize="none"
+        autoComplete={autoComplete}
+        autoCorrect="off"
+        required={required}
+        disabled={pending}
+      />
+    </>
+  );
+};
+
+const SignInButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+      Sign In
+    </Button>
+  );
+};

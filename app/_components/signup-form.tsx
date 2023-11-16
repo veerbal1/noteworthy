@@ -6,73 +6,64 @@ import { Label } from '@/components/ui/label';
 import { HTMLAttributes, useState } from 'react';
 import { Icons } from './icons';
 import { cn } from '@/lib/utils';
+import { signUpAction } from '@/lib/actions';
+import { useFormState, useFormStatus } from 'react-dom';
+import FormInput from './input';
 
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
 function SingupForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-  }
-
+  const [state, dispatch] = useFormState(signUpAction, undefined);
   return (
     <div className={cn('grid gap-6', className)} {...props}>
-      <form onSubmit={onSubmit}>
+      <form action={dispatch}>
         <div className="grid gap-2">
           <div className="grid gap-2">
-            <Label className="sr-only" htmlFor="name">
-              Full Name
-            </Label>
-            <Input
+            <FormInput
               id="name"
-              placeholder="e.g Veerbal"
+              label="Full Name"
+              autoComplete="name"
               type="text"
-              autoCapitalize="none"
-              autoComplete="firstname"
-              autoCorrect="off"
-              disabled={isLoading}
+              required
+              placeholder="Full Name"
+              name="name"
             />
-            <Label className="sr-only" htmlFor="email">
-              Email
-            </Label>
-            <Input
+            <FormInput
               id="email"
-              placeholder="name@example.com"
-              type="email"
-              autoCapitalize="none"
+              label="Email"
               autoComplete="email"
-              autoCorrect="off"
-              disabled={isLoading}
+              type="email"
+              required
+              placeholder="Email"
+              name="email"
             />
-            <Label className="sr-only" htmlFor="password">
-              Password
-            </Label>
-            <Input
+            <FormInput
               id="password"
-              placeholder="Password"
-              type="password"
-              autoCapitalize="none"
+              label="Password"
               autoComplete="password"
-              autoCorrect="off"
-              disabled={isLoading}
+              type="password"
+              required
+              placeholder="Password"
+              name="password"
+              min={6}
             />
+            <p className="text-red-400 text-sm">{state}</p>
+            <SignUpButton />
           </div>
-          <Button disabled={isLoading}>
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            Sign Up
-          </Button>
         </div>
       </form>
     </div>
   );
 }
+
+const SignUpButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <Button disabled={pending}>
+      {pending && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+      Sign Up
+    </Button>
+  );
+};
 
 export default SingupForm;

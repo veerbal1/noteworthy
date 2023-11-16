@@ -4,13 +4,12 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { Icons } from './icons';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 import { authenticate } from '@/lib/actions';
 
 import { useFormState, useFormStatus } from 'react-dom';
+import FormInput from './input';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -57,44 +56,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     </div>
   );
 }
-
-const FormInput = ({
-  label = '',
-  name,
-  placeholder,
-  autoComplete,
-  type,
-  required,
-  id,
-}: {
-  id: string;
-  label: string;
-  name: string;
-  placeholder: string;
-  autoComplete: string;
-  type: string;
-  required: boolean;
-}) => {
-  const { pending } = useFormStatus();
-  return (
-    <>
-      <Label className="sr-only" htmlFor={id}>
-        {label.charAt(0).toUpperCase() + label.slice(1)}
-      </Label>
-      <Input
-        id={id}
-        name={name}
-        placeholder={placeholder}
-        type={type}
-        autoCapitalize="none"
-        autoComplete={autoComplete}
-        autoCorrect="off"
-        required={required}
-        disabled={pending}
-      />
-    </>
-  );
-};
 
 const SignInButton = () => {
   const { pending } = useFormStatus();

@@ -2,7 +2,7 @@
 import { signIn, signOut } from '@/auth';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
-import { sql } from '@vercel/postgres';
+import { createClient } from '@vercel/postgres';
 
 export async function authenticate(
   prevState: string | undefined,
@@ -29,19 +29,23 @@ export async function signUpAction(
   formData: FormData
 ) {
   try {
+    const client = createClient();
+    await client.connect();
     const formDataObject = Object.fromEntries(formData);
     // Validate the form data using the Zod schema
     const validatedData = signUpSchema.parse(formDataObject);
     console.log('Validated data', validatedData);
-    const { rowCount } =
-      await sql`SELECT email FROM users WHERE email = ${validatedData.email}`;
-    console.log('Row Count', rowCount);
+
+    const { rowCount, rows: singleUser } =
+      await client.sql`SELECT id FROM users WHERE email = ${validatedData.email};`;
+
     if (rowCount) return 'User already exists';
+
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
-    const { rows } = await sql`
-      INSERT INTO users(name, email, password) VALUES(${validatedData.name}, ${validatedData.email}, ${hashedPassword})
-    `;
+    const { rows } = await client.sql`
+      INSERT INTO users(name, email, password) VALUES(${validatedData.name}, ${validatedData.email}, ${hashedPassword});`;
     console.log(rows);
+    await client.end();
     return 'User Submitted Successfully';
   } catch (error) {
     if (error instanceof z.ZodError) {

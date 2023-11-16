@@ -15,7 +15,6 @@ function Layout({ children }: { children: React.ReactNode }) {
             </p>
             <footer className="text-sm">Anonymous</footer>
           </blockquote>
-          Logo
         </div>
       </div>
       {children}

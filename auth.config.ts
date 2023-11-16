@@ -10,6 +10,8 @@ export const authConfig = {
   ],
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
+      const isSignPage = nextUrl.pathname === '/signup';
+      if (isSignPage) return true;
       const isLoggedIn = !!auth?.user;
 
       if (!isLoggedIn && nextUrl.pathname !== '/') {

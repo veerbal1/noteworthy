@@ -9,27 +9,24 @@ import {
   AvatarImage,
 } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { signOut } from '@/auth';
+import { logout } from '@/lib/actions';
+import { auth } from '@/auth';
 
-function Avatar() {
+async function Avatar() {
+  const session = await auth();
+  const { user } = session || { user: null };
   return (
     <Popover>
       <PopoverTrigger>
         <ShadCNAvatar>
           <AvatarImage src="https://avatars.githubusercontent.com/u/55359171?v=4" />
-          <AvatarFallback>VS</AvatarFallback>
         </ShadCNAvatar>
       </PopoverTrigger>
       <PopoverContent>
         <div className="flex flex-col gap-4 justify-center items-center">
-          <h3 className="text-gray-950">Veerbal Singh</h3>
-          <h4 className="text-zinc-800">veerbalsingh1@gmail.com</h4>
-          <form
-            action={async () => {
-              'use server';
-              await signOut();
-            }}
-          >
+          <h3 className="text-gray-950">{user?.name}</h3>
+          <h4 className="text-zinc-800">{user?.email}</h4>
+          <form action={logout}>
             <Button>
               <div className="hidden md:block">Sign Out</div>
             </Button>

@@ -9,11 +9,11 @@ async function NotesList() {
   return (
     <div className="flex gap-2 flex-wrap justify-start">
       {rows.map((row) => (
-        <NotesCard title={row.title} description={row.description} />
-        //   <li key={row.id}>
-        //     <div className="text-lg">{row.title}</div>
-        //     <div className="text-sm">{row.description}</div>
-        //   </li>
+        <NotesCard
+          key={row.id}
+          title={row.title}
+          description={row.description}
+        />
       ))}
     </div>
   );

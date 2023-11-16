@@ -17,10 +17,17 @@ async function seedUsers(client) {
     console.log(`Created "users" table`);
 
     // Insert data into the "users" table
-    const hashedPassword = await bcrypt.hash('123456', 10);
+    const hashedPassword1 = await bcrypt.hash('dummyuser', 10);
+    const hashedPassword2 = await bcrypt.hash('veerbal', 10);
     await client.sql`
     INSERT INTO users (id, name, email, password)
-    VALUES (${"410544b2-4001-4271-9855-fec4b6a6442b"}, ${'Veerbal'}, ${'user@nextmail.com'}, ${hashedPassword})
+    VALUES (${"410544b2-4001-4271-9855-fec4b6a6442b"}, ${'Dummy User'}, ${'user@nextmail.com'}, ${hashedPassword1})
+    ON CONFLICT (id) DO NOTHING;
+  `;
+
+    await client.sql`
+    INSERT INTO users (id, name, email, password)
+    VALUES (${"410544b2-4001-4271-9855-fec4b6a6442c"}, ${'Veerbal Singh'}, ${'veerbal@gmail.com'}, ${hashedPassword2})
     ON CONFLICT (id) DO NOTHING;
   `;
 

@@ -9,7 +9,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         <div className="left w-56 ">
           <Sidebar />
         </div>
-        <div className="right w-full h-full relative pr-56">{children}</div>
+        <div className="right w-full h-full relative pr-36 md:pr-48">{children}</div>
       </div>
     </div>
   );

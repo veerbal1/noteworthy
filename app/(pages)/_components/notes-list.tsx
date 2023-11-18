@@ -13,6 +13,7 @@ async function NotesList() {
           key={row.id}
           title={row.title}
           description={row.description}
+          link={`/notes/${row.id}`}
         />
       ))}
     </div>

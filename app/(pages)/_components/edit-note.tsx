@@ -4,7 +4,7 @@ import { Pencil1Icon } from '@radix-ui/react-icons';
 function EditNote() {
   return (
     <Button>
-      <Pencil1Icon className='pr-2'/>
+      <Pencil1Icon className='text-lg mr-2'/>
       Edit Note
     </Button>
   );

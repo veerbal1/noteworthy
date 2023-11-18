@@ -7,7 +7,7 @@ async function NotesList() {
   const { user } = session || { user: null };
   const rows = await getNotes(user?.email);
   return (
-    <div className="flex gap-2 flex-wrap justify-start">
+    <div className="flex gap-2 flex-wrap justify-center w-full">
       {rows.map((row) => (
         <NotesCard
           key={row.id}

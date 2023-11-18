@@ -9,7 +9,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         <div className="left w-56 ">
           <Sidebar />
         </div>
-        <div className="right w-full max-h-screen relative pr-36 md:pr-48 overflow-scroll">{children}</div>
+        <div className="right w-full max-h-screen relative pb-20 pr-36 md:pr-48 overflow-scroll">{children}</div>
       </div>
     </div>
   );

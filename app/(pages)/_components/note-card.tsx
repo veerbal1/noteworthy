@@ -14,7 +14,7 @@ function NotesCard({
   return (
     <Link href={link} className='w-60'>
       <Card
-        className="w-60 hover:shadow-2xl transition-all cursor-pointer"
+        className="w-60 h-60 hover:shadow-2xl transition-all cursor-pointer"
         {...props}
       >
         <CardHeader>

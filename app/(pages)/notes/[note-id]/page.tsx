@@ -24,7 +24,7 @@ async function NoteDetails({ params }: { params: { 'note-id': string } }) {
         ))}
       </div>
       <div className="sticky right-0 mr-4 flex flex-col gap-2">
-        <EditNote />
+        <EditNote nodeId={params['note-id']} />
         <DeleteNote />
       </div>
     </div>

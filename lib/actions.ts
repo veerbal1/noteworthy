@@ -1,8 +1,10 @@
 'use server';
-import { signIn, signOut } from '@/auth';
+import { auth, signIn, signOut } from '@/auth';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
-import { createClient } from '@vercel/postgres';
+import { createClient, sql } from '@vercel/postgres';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export async function authenticate(
   prevState: string | undefined,
@@ -22,6 +24,11 @@ const signUpSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid Email'),
   password: z.string().min(6, 'Password must be at least 6 characters long'),
+});
+
+const noteSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  description: z.string(),
 });
 
 export async function signUpAction(
@@ -48,6 +55,43 @@ export async function signUpAction(
     await client.end();
     return 'User Submitted Successfully';
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      // Log or return the validation error messages
+      console.error(error.errors);
+      return error.errors.map((err) => err.message).join(', ');
+    }
+
+    if ((error as Error).message.includes('CredentialsSignup')) {
+      return 'CredentialsSignup';
+    }
+    return JSON.stringify(error);
+  }
+}
+
+export async function noteSubmissionAction(id: string, formData: FormData) {
+  try {
+    const session = await auth();
+    if (!session) return 'Not Authorized';
+    const client = createClient();
+    await client.connect();
+
+    const formDataObject = Object.fromEntries(formData);
+    // Validate the form data using the Zod schema
+    const validatedData = noteSchema.parse(formDataObject);
+    // console.log('New note Validated data', validatedData);
+
+    await sql`
+      UPDATE notes
+      SET title = ${validatedData.title}, description = ${validatedData.description}
+      WHERE id = ${id} AND userId = ${session.user.id}
+    `;
+
+    console.log('Notes Submitted Successfully');
+    revalidatePath(`/notes/${id}`);
+    await client.end();
+    redirect(`/notes/${id}`);
+  } catch (error) {
+    console.log(error);
     if (error instanceof z.ZodError) {
       // Log or return the validation error messages
       console.error(error.errors);

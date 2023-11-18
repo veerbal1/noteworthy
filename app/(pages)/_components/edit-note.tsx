@@ -1,12 +1,15 @@
 import { Button } from '@/components/ui/button';
 import { Pencil1Icon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 
-function EditNote() {
+function EditNote({ nodeId }: { nodeId: string }) {
   return (
-    <Button>
-      <Pencil1Icon className='text-lg mr-2'/>
-      Edit Note
-    </Button>
+    <Link href={`${nodeId}/edit`}>
+      <Button>
+        <Pencil1Icon className="text-lg mr-2" />
+        Edit Note
+      </Button>
+    </Link>
   );
 }
 

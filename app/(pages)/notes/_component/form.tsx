@@ -1,18 +1,18 @@
 import { Textarea } from '@/components/ui/textarea';
-import SubmitButton from './submit-button';
+import SubmitButton from '../[note-id]/edit/submit-button';
 import { useFormState } from 'react-dom';
 import { noteSubmissionAction } from '@/lib/actions';
 
-function EditForm({
+function Form({
   id,
   title,
   description,
 }: {
-  id: string;
-  title: string;
-  description: string;
+  id?: string;
+  title?: string;
+  description?: string;
 }) {
-  const dispatch = noteSubmissionAction.bind(null, id);
+  const dispatch = noteSubmissionAction.bind(null, id || '');
   return (
     <div className="flex-1">
       <form className="flex flex-col gap-4 items-start" action={dispatch}>
@@ -37,4 +37,4 @@ function EditForm({
   );
 }
 
-export default EditForm;
+export default Form;

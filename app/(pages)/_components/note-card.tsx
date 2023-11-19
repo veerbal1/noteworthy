@@ -4,17 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import DeleteForm from './note-card-delete-form';
 
-function truncateString(str: string, maxLength: number) {
-  // Check if the length of the string is greater than the maxLength
-  if (str.length > maxLength) {
-    // If so, truncate the string to the maxLength and add '...'
-    return str.substring(0, maxLength) + '...';
-  } else {
-    // Otherwise, return the original string
-    return str;
-  }
-}
-
 function NotesCard({
   id,
   title,

@@ -1,9 +1,10 @@
 import { getNotesContent } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import EditNote from '../../_components/edit-note';
-import DeleteNote from '../../_components/delete-note';
+import DeleteNote from './_components/delete-note-button';
 import { Suspense } from 'react';
 import { deleteFormAction } from '@/lib/actions';
+import DeleteNoteForm from './_components/DeleteForm';
 
 async function NoteDetails({ params }: { params: { 'note-id': string } }) {
   return (
@@ -18,15 +19,6 @@ async function NoteDetails({ params }: { params: { 'note-id': string } }) {
     </Suspense>
   );
 }
-
-const DeleteNoteForm = ({ id }: { id: string }) => {
-  const dispatch = deleteFormAction.bind(null, id);
-  return (
-    <form action={dispatch}>
-      <DeleteNote />
-    </form>
-  );
-};
 
 const Content = async ({ id }: { id: string }) => {
   const { status, rows } = await getNotesContent(id);

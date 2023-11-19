@@ -1,9 +1,8 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import Icon from './icons';
-import { TrashIcon } from '@radix-ui/react-icons';
-import { Button } from '@/components/ui/button';
-import { deleteFormAction } from '@/lib/actions';
+import DeleteForm from './note-card-delete-form';
 
 function NotesCard({
   id,
@@ -36,18 +35,5 @@ function NotesCard({
     </div>
   );
 }
-
-const DeleteForm = ({ id }: { id: string }) => {
-  const dispatch = deleteFormAction.bind(null, id);
-  return (
-    <form action={dispatch}>
-      <Button className="h-1 w-1 bg-transparent hover:bg-transparent shadow-none transition-all hover:scale-150">
-        <Icon className="h-4 cursor-pointer transition-all hover:scale-12">
-          <TrashIcon className="text-black" />
-        </Icon>
-      </Button>
-    </form>
-  );
-};
 
 export default NotesCard;

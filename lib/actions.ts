@@ -119,7 +119,7 @@ export async function deleteFormAction(id: string) {
   console.log('deleteFormAction', id);
   try {
     const session = await auth();
-    if (!session) return 'Not Authorized';
+    if (!session) return { message: 'Not Authorized' };
     const client = createClient();
     await client.connect();
     // console.log('New note Validated data', validatedData);
@@ -138,13 +138,10 @@ export async function deleteFormAction(id: string) {
     if (error instanceof z.ZodError) {
       // Log or return the validation error messages
       console.error(error.errors);
-      return error.errors.map((err) => err.message).join(', ');
+      return { message: error.errors.map((err) => err.message).join(', ') };
     }
 
-    if ((error as Error).message.includes('CredentialsSignup')) {
-      return 'CredentialsSignup';
-    }
-    return JSON.stringify(error);
+    return { message: JSON.stringify(error) };
   }
 }
 

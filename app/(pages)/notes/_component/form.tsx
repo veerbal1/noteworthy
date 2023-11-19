@@ -1,6 +1,5 @@
 import { Textarea } from '@/components/ui/textarea';
 import SubmitButton from '../[note-id]/edit/submit-button';
-import { useFormState } from 'react-dom';
 import { noteSubmissionAction } from '@/lib/actions';
 
 function Form({

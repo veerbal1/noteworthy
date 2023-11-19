@@ -79,15 +79,21 @@ export async function noteSubmissionAction(id: string, formData: FormData) {
     // Validate the form data using the Zod schema
     const validatedData = noteSchema.parse(formDataObject);
     // console.log('New note Validated data', validatedData);
-
-    await sql`
+    if (id) {
+      await sql`
       UPDATE notes
       SET title = ${validatedData.title}, description = ${validatedData.description}
       WHERE id = ${id} AND userId = ${session.user.id}
     `;
+    } else {
+      await sql`
+      INSERT INTO notes (userId, title, description) VALUES (${session.user.id}, ${validatedData.title}, ${validatedData.description});
+    `;
+    }
 
     console.log('Notes Submitted Successfully');
     revalidatePath(`/notes/${id}`);
+    revalidatePath(`/notes`);
     await client.end();
     redirect(`/notes/${id}`);
   } catch (error) {

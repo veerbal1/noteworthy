@@ -75,7 +75,7 @@ export async function signUpAction(
 export async function noteSubmissionAction(id: string, formData: FormData) {
   try {
     const session = await auth();
-    if (!session) return 'Not Authorized';
+    if (!session) return { message: 'Not Authorized' };
     const client = createClient();
     await client.connect();
 
@@ -105,13 +105,11 @@ export async function noteSubmissionAction(id: string, formData: FormData) {
     if (error instanceof z.ZodError) {
       // Log or return the validation error messages
       console.error(error.errors);
-      return error.errors.map((err) => err.message).join(', ');
+      return { message: error.errors.map((err) => err.message).join(', ') };
     }
-
-    if ((error as Error).message.includes('CredentialsSignup')) {
-      return 'CredentialsSignup';
-    }
-    return JSON.stringify(error);
+    return {
+      message: JSON.stringify(error),
+    };
   }
 }
 

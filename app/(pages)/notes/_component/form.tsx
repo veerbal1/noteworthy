@@ -1,6 +1,13 @@
+'use client';
+
 import { Textarea } from '@/components/ui/textarea';
-import SubmitButton from '../[note-id]/edit/submit-button';
+import SubmitButton from './submit-button';
 import { noteSubmissionAction } from '@/lib/actions';
+import { useFormState } from 'react-dom';
+
+const initialState = {
+  message: '',
+};
 
 function Form({
   id,
@@ -12,6 +19,7 @@ function Form({
   description?: string;
 }) {
   const dispatch = noteSubmissionAction.bind(null, id || '');
+  const [] = useFormState(dispatch, initialState);
   return (
     <div className="flex-1">
       <form className="flex flex-col gap-4 items-start" action={dispatch}>

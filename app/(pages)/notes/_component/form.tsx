@@ -18,11 +18,12 @@ function Form({
   title?: string;
   description?: string;
 }) {
-  const dispatch = noteSubmissionAction.bind(null, id || '');
-  const [] = useFormState(dispatch, initialState);
+  const dispatchWrapper = (state: any, formData: FormData) =>
+    noteSubmissionAction(id, formData);
+  const [state, formAction] = useFormState(dispatchWrapper, initialState);
   return (
     <div className="flex-1">
-      <form className="flex flex-col gap-4 items-start" action={dispatch}>
+      <form className="flex flex-col gap-4 items-start" action={formAction}>
         <Textarea
           defaultValue={title}
           className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl outline-none border-none focus-visible:ring-0 focus-visible:border-none focus-visible:outline-none shadow-none pb-2"

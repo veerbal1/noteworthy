@@ -72,7 +72,10 @@ export async function signUpAction(
   }
 }
 
-export async function noteSubmissionAction(id: string, formData: FormData) {
+export async function noteSubmissionAction(
+  id: string | undefined,
+  formData: FormData
+) {
   try {
     const session = await auth();
     if (!session) return { message: 'Not Authorized' };

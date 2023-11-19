@@ -27,13 +27,13 @@ const Content = async ({ id }: { id: string }) => {
     return;
   }
   return (
-    <div className="flex-1">
+    <div className="flex-1 pr-10">
       {rows.map((row) => (
         <div key={row.id}>
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
             {row.title}
           </h1>
-          <p className="leading-7 [&:not(:first-child)]:mt-6">
+          <p className="leading-7 [&:not(:first-child)]:mt-6 text-justify">
             {row.description}
           </p>
         </div>

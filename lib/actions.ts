@@ -39,6 +39,7 @@ export async function signUpAction(
   prevState: string | undefined,
   formData: FormData
 ) {
+  let success = false;
   try {
     const client = createClient();
     await client.connect();
@@ -57,6 +58,7 @@ export async function signUpAction(
       INSERT INTO users(name, email, password) VALUES(${validatedData.name}, ${validatedData.email}, ${hashedPassword});`;
     console.log(rows);
     await client.end();
+    success = true;
     return 'User Submitted Successfully';
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -69,6 +71,10 @@ export async function signUpAction(
       return 'CredentialsSignup';
     }
     return JSON.stringify(error);
+  } finally {
+    if (success) {
+      redirect('/');
+    }
   }
 }
 

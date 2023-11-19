@@ -3,20 +3,30 @@ import { notFound } from 'next/navigation';
 import EditNote from '../../_components/edit-note';
 import DeleteNote from '../../_components/delete-note';
 import { Suspense } from 'react';
+import { deleteFormAction } from '@/lib/actions';
 
 async function NoteDetails({ params }: { params: { 'note-id': string } }) {
   return (
-    <div className="flex w-full gap-2">
-      <Suspense fallback={<div className="flex w-full gap-2">Loading...</div>}>
+    <Suspense fallback={<div className="flex w-full gap-2">Loading...</div>}>
+      <div className="flex w-full gap-2">
         <Content id={params['note-id']} />
-      </Suspense>
-      <div className="sticky right-0 mr-4 flex flex-col gap-2">
-        <EditNote nodeId={params['note-id']} />
-        <DeleteNote />
+        <div className="sticky right-0 mr-4 flex flex-col gap-2">
+          <EditNote nodeId={params['note-id']} />
+          <DeleteNoteForm id={params['note-id']} />
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 }
+
+const DeleteNoteForm = ({ id }: { id: string }) => {
+  const dispatch = deleteFormAction.bind(null, id);
+  return (
+    <form action={dispatch}>
+      <DeleteNote />
+    </form>
+  );
+};
 
 const Content = async ({ id }: { id: string }) => {
   const { status, rows } = await getNotesContent(id);

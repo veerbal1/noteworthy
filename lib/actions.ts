@@ -31,6 +31,10 @@ const noteSchema = z.object({
   description: z.string(),
 });
 
+const deleteNoteSchema = z.object({
+  id: z.string().min(1, 'ID is requieed'),
+});
+
 export async function signUpAction(
   prevState: string | undefined,
   formData: FormData
@@ -94,6 +98,39 @@ export async function noteSubmissionAction(id: string, formData: FormData) {
     console.log('Notes Submitted Successfully');
     revalidatePath(`/notes/${id}`);
     revalidatePath(`/notes`);
+    await client.end();
+    redirect(`/notes/${id}`);
+  } catch (error) {
+    console.log(error);
+    if (error instanceof z.ZodError) {
+      // Log or return the validation error messages
+      console.error(error.errors);
+      return error.errors.map((err) => err.message).join(', ');
+    }
+
+    if ((error as Error).message.includes('CredentialsSignup')) {
+      return 'CredentialsSignup';
+    }
+    return JSON.stringify(error);
+  }
+}
+
+export async function deleteFormAction(id: string) {
+  console.log('deleteFormAction', id);
+  try {
+    const session = await auth();
+    if (!session) return 'Not Authorized';
+    const client = createClient();
+    await client.connect();
+    // console.log('New note Validated data', validatedData);
+
+    await sql`
+      DELETE FROM notes WHERE id = ${id} AND userId = ${session.user.id};
+    `;
+
+    console.log('Notes Deleted Successfully');
+    revalidatePath(`/notes`);
+    revalidatePath(`/notes/${id}`);
     await client.end();
     redirect(`/notes/${id}`);
   } catch (error) {

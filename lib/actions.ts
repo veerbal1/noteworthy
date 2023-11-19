@@ -132,7 +132,7 @@ export async function noteSubmissionAction(
 }
 
 export async function deleteFormAction(id: string) {
-  console.log('deleteFormAction', id);
+  let success = false;
   try {
     const session = await auth();
     if (!session) return { message: 'Not Authorized' };
@@ -148,7 +148,7 @@ export async function deleteFormAction(id: string) {
     revalidatePath(`/notes`);
     revalidatePath(`/notes/${id}`);
     await client.end();
-    redirect(`/notes/${id}`);
+    success = true;
   } catch (error) {
     console.log(error);
     if (error instanceof z.ZodError) {
@@ -158,6 +158,8 @@ export async function deleteFormAction(id: string) {
     }
 
     return { message: JSON.stringify(error) };
+  } finally {
+    redirect(`/notes`);
   }
 }
 

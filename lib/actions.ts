@@ -76,6 +76,7 @@ export async function noteSubmissionAction(
   id: string | undefined,
   formData: FormData
 ) {
+  let success = false;
   try {
     const session = await auth();
     if (!session) return { message: 'Not Authorized' };
@@ -101,8 +102,8 @@ export async function noteSubmissionAction(
     console.log('Notes Submitted Successfully');
     revalidatePath(`/notes/${id}`);
     revalidatePath(`/notes`);
+    success = true;
     await client.end();
-    redirect(`/notes/${id}`);
   } catch (error) {
     console.log(error);
     if (error instanceof z.ZodError) {
@@ -113,6 +114,14 @@ export async function noteSubmissionAction(
     return {
       message: JSON.stringify(error),
     };
+  } finally {
+    if (success) {
+      if (id) {
+        redirect(`/notes/${id}`);
+      } else {
+        redirect(`/notes`);
+      }
+    }
   }
 }
 

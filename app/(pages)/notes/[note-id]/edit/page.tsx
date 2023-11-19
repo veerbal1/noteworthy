@@ -1,6 +1,6 @@
 import { getNotesContent } from '@/lib/db';
-import EditForm from '../../_component/form';
 import { Suspense } from 'react';
+import Form from '../../_component/form';
 
 async function EditNote({
   params,
@@ -23,7 +23,7 @@ const Content = async ({ noteId }: { noteId: string }) => {
   return (
     <>
       {rows.map((row) => (
-        <EditForm
+        <Form
           key={row.id}
           id={row.id}
           title={row.title}

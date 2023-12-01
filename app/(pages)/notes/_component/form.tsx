@@ -5,6 +5,20 @@ import SubmitButton from './submit-button';
 import { noteSubmissionAction } from '@/lib/actions';
 import { useFormState } from 'react-dom';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import {
+  FormMessage,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  Form as ShadCNForm,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import formSchema, { FormSchemaType } from './form-schema';
+
 const initialState = {
   message: '',
 };
@@ -21,26 +35,55 @@ function Form({
   const dispatchWrapper = (state: any, formData: FormData) =>
     noteSubmissionAction(id, formData);
   const [state, formAction] = useFormState(dispatchWrapper, initialState);
+
+  const form = useForm<FormSchemaType>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+    },
+  });
+
+  const onSubmit = (data: FormSchemaType) => {
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formAction(formData);
+  };
+
   return (
-    <div className="flex-1">
-      <form className="flex flex-col gap-4 items-start" action={formAction}>
-        <Textarea
-          defaultValue={title}
-          className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl outline-none border-none focus-visible:ring-0 focus-visible:border-none focus-visible:outline-none shadow-none pb-2"
-          placeholder="Title"
-          rows={1}
-          autoFocus
-          contentEditable
-          name="title"
-        />
-        <Textarea
-          contentEditable
-          defaultValue={description}
-          className="leading-7 [&:not(:first-child)]:mt-6 outline-none border-none focus-visible:ring-0 focus-visible:border-none focus-visible:outline-none shadow-none"
-          name="description"
-        />
-        <SubmitButton />
-      </form>
+    <div className="flex-1 p-4">
+      <ShadCNForm {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="API Integration" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="API Integration..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <SubmitButton />
+        </form>
+      </ShadCNForm>
     </div>
   );
 }

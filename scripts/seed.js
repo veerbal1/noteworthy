@@ -88,8 +88,8 @@ async function seedNotes(client) {
 async function main() {
   const client = await db.connect();
 
-  await seedUsers(client);
-  await seedNotes(client);
+  // await seedUsers(client);
+  // await seedNotes(client);
 
   await client.end();
 }

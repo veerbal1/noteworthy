@@ -18,6 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import formSchema, { FormSchemaType } from './form-schema';
+import Tiptap from './tiptap';
 
 const initialState = {
   message: '',
@@ -75,7 +76,7 @@ function Form({
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="API Integration..." {...field} />
+                  <Tiptap description={field.value} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

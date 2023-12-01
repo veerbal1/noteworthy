@@ -33,9 +33,10 @@ const Content = async ({ id }: { id: string }) => {
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
             {row.title}
           </h1>
-          <p className="leading-7 [&:not(:first-child)]:mt-6 text-justify">
-            {row.description}
-          </p>
+          <p
+            className="leading-7 [&:not(:first-child)]:mt-6 text-justify"
+            dangerouslySetInnerHTML={{ __html: row.description }}
+          ></p>
         </div>
       ))}
     </div>

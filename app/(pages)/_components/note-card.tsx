@@ -23,10 +23,15 @@ function NotesCard({
           className="relative w-60 cursor-pointer shadow-none border-none max-h-60"
           {...props}
         >
-          <CardHeader className='pb-4'>
-            <CardTitle className='overflow-hidden text-ellipsis whitespace-nowrap'>{title}</CardTitle>
+          <CardHeader className="pb-4">
+            <CardTitle className="overflow-hidden text-ellipsis whitespace-nowrap">
+              {title}
+            </CardTitle>
           </CardHeader>
-          <CardContent className='overflow-hidden h-36'>{description}</CardContent>
+          <CardContent
+            className="overflow-hidden h-36"
+            dangerouslySetInnerHTML={{ __html: description }}
+          ></CardContent>
         </Card>
       </Link>
       <div className="flex justify-end items-center h-8">

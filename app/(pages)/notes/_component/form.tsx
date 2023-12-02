@@ -40,8 +40,8 @@ function Form({
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      description: '',
+      title: title,
+      description: description,
     },
   });
 
